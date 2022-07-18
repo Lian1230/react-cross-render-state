@@ -1,16 +1,33 @@
 import {
   createContext,
   FC,
-  ReactElement,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
+  ReactElement, useCallback, useContext, useEffect, useState
 } from "react";
 
 type CountContextState = [number, () => void];
 
 type Listener = () => void;
+
+const CountContext = createContext<CountContextState>([0, () => null]);
+
+export const CountProvider: FC<{
+  children: ReactElement;
+  contextValue?: CountContextState;
+}> = ({ children, contextValue }) => {
+  const [count, setCount] = useState(0);
+
+  const inc = () => setCount((prev) => prev + 1);
+
+  // const value = contextValue || [count, inc];
+
+  return (
+    <CountContext.Provider value={[count, inc]}>
+      {children}
+    </CountContext.Provider>
+  );
+};
+
+export const useCount = () => useContext(CountContext);
 
 // const createExternalStore = <S,>(initialState: S) => {
 //   let state = initialState;
@@ -30,22 +47,6 @@ type Listener = () => void;
 // };
 
 // const store = createExternalStore({ count: 0 });
-
-const CountContext = createContext<CountContextState>([0, () => null]);
-
-export const CountProvider: FC<{ children: ReactElement }> = ({ children }) => {
-  const [count, setCount] = useState(0);
-
-  const inc = () => setCount((prev) => prev + 1);
-
-  return (
-    <CountContext.Provider value={[count, inc]}>
-      {children}
-    </CountContext.Provider>
-  );
-};
-
-export const useCount = () => useContext(CountContext);
 
 // export const useCount = (): [number, () => void] => {
 //   const [count, setCount] = useState(() => store.getState().count);

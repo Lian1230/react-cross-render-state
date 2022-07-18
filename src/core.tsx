@@ -1,50 +1,26 @@
-import { useEffect, useRef, useState, SyntheticEvent } from "react";
-import ReactDOM from "react-dom/client";
+import { useState, SyntheticEvent } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import Service from "./service";
 import { Count } from "./component/count";
-
-const Services = [
-  { label: "Service One" },
-  { label: "Service Two" },
-  { label: "Service Three" },
-  { label: "Service Four" },
-  { label: "Service Five" },
-  { label: "Service Six" },
-  { label: "Service Seven" },
-];
+import { MountService, Services } from "./mount-service";
 
 export default function Core() {
-  const [value, setValue] = useState(0);
-  const serviceRef = useRef(null);
+  const [currentServiceIdx, setCurrentServiceIdx] = useState(0);
 
   const handleChange = (_event: SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setCurrentServiceIdx(newValue);
   };
-
-  useEffect(() => {
-    ReactDOM.createRoot(serviceRef.current!).render(
-      <Service name={Services[value].label} />
-    );
-  }, [value]);
 
   return (
     <div className="grid grid-rows-[min-content,auto] h-100vh">
       <Header />
-      <Box
-        sx={{
-          flexGrow: 1,
-          bgcolor: "background.paper",
-          display: "flex",
-        }}
-      >
+      <Box sx={{ flexGrow: 1, bgcolor: "background.paper", display: "flex" }}>
         <Tabs
           className="bg-gray-300"
           orientation="vertical"
           variant="scrollable"
-          value={value}
+          value={currentServiceIdx}
           onChange={handleChange}
           aria-label="Vertical tabs example"
           sx={{ borderRight: 1, borderColor: "divider" }}
@@ -54,7 +30,7 @@ export default function Core() {
           ))}
           <Count />
         </Tabs>
-        <div ref={serviceRef} className="w-full bg-yellow-200" />
+        <MountService serviceIdx={currentServiceIdx} />
       </Box>
     </div>
   );
@@ -63,7 +39,7 @@ export default function Core() {
 const Header = () => (
   <div>
     <h1 className="relative flex justify-center items-center h-8 bg-gray-400 text-lg">
-      <span className="absolute left-0 h-full m-4">Shell App</span>
+      <span className="absolute left-0 h-full m-4">Shell App (core)</span>
       Header
     </h1>
   </div>
