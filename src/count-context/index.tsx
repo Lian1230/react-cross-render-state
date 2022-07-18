@@ -7,13 +7,13 @@ const CountContext = createContext<CountContextState>([0, () => null]);
 export const CountProvider: FC<{
   children: ReactElement;
   contextValue?: CountContextState;
-}> = ({ children }) => {
+}> = ({ children, contextValue }) => {
   const [count, setCount] = useState(0);
 
   const inc = () => setCount((prev) => prev + 1);
 
   return (
-    <CountContext.Provider value={[count, inc]}>
+    <CountContext.Provider value={contextValue || [count, inc]}>
       {children}
     </CountContext.Provider>
   );

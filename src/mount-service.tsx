@@ -1,6 +1,7 @@
 import { FC, useRef, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { Count } from "./component/count";
+import { CountProvider, useCount } from "./count-context";
 
 export const Services = [
   { label: "Service One" },
@@ -13,13 +14,16 @@ export const Services = [
 ];
 
 export const MountService: FC<{ serviceIdx: number }> = ({ serviceIdx }) => {
+  const countContextValue = useCount();
   const serviceRef = useRef(null);
 
   useEffect(() => {
     ReactDOM.createRoot(serviceRef.current!).render(
-      <Service name={Services[serviceIdx].label} />
+      <CountProvider contextValue={countContextValue}>
+        <Service name={Services[serviceIdx].label} />
+      </CountProvider>
     );
-  }, [serviceIdx]);
+  }, [serviceIdx, countContextValue]);
 
   return <div ref={serviceRef} className="w-full bg-yellow-200" />;
 };
