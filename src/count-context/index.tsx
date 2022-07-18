@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 type Listener = () => void;
 
@@ -29,6 +29,11 @@ export const useCount = (): [number, () => void] => {
     callback();
     return unsubscribe;
   }, []);
+
+  // const count = useSyncExternalStore(
+  //   store.subscribe,
+  //   useCallback(() => store.getState().count, [store])
+  // );
 
   const inc = useCallback(() => {
     store.setState((prev) => ({ count: prev.count + 1 }));
